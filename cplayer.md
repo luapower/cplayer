@@ -1,6 +1,7 @@
 ---
-project: cplayer
-tagline: procedural graphics player with IMGUI toolkit
+project:     cplayer
+tagline:     procedural graphics player with IMGUI toolkit
+category:    GUI
 ---
 
 v1.0 | LuaJIT 2 | Windows
