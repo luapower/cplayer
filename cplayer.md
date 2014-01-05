@@ -4,8 +4,6 @@ tagline:     procedural graphics player with IMGUI toolkit
 category:    GUI
 ---
 
-v1.0 | LuaJIT 2 | Windows
-
 ## `local player = require'cplayer'`
 
 CPlayer is a procedural graphics player with an IMGUI toolkit. It can be used for anything from quick demos,
