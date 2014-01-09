@@ -67,9 +67,7 @@ function itemlist:layout()
 end
 
 function itemlist:render(app)
-	for self:boxes(self.ui.drag_item, self.ui.drag_index) do
 
-	end
 end
 
 function itemlist:update(app)
