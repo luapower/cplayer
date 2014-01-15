@@ -1,7 +1,6 @@
 ---
 project:     cplayer
 tagline:     procedural graphics player with IMGUI toolkit
-category:    GUI
 ---
 
 ## `local player = require'cplayer'`
