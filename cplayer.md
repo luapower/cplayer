@@ -1,16 +1,17 @@
 ---
 project: cplayer
 tagline: procedural graphics & IMGUI toolkit
+platforms: mingw32
 ---
 
 ## `local player = require'cplayer'`
 
-CPlayer is a procedural graphics player with an IMGUI toolkit. It can be used for anything from quick demos,
-prototyping graphics apps, to full-fledged apps and games.
+CPlayer is a procedural graphics player with an IMGUI toolkit.
+It can be used for anything from quick demos, prototyping graphics apps, to full-fledged apps and games.
 
 ## Features
 
-  * single rendering event receiving a cairo context to draw the frame with
+  * single rendering event receiving a cairo context to draw the frame on
   * simplified access to keyboard and mouse state
   * a bunch of very easy to use immediate mode GUI widgets for making interactive demos
   * user-selectable color themes
@@ -42,7 +43,7 @@ player:play()
 ### Mouse state
 
 ---------------------------------------------- ----------------------------------------------
-`self.mousex` \                                mouse coordinates in device space.
+`self.mousex`                                  mouse coordinates in device space.
 `self.mousey`                                  use `cr:device_to_user()` to translate them.
 `self.clicked`                                 true if the left mouse button was clicked (one-shot)
 `self.rightclick`                              true if the right mouse button was clicked (one-shot)
@@ -64,7 +65,7 @@ player:play()
 `self:keypressed(keyname) -> true | false`     check if a key is pressed
 ---------------------------------------------- ----------------------------------------------
 
-**Note:** one-shot means that the value is only available for the current frame, then it is cleared.
+> One-shot means that the value is only available for the current frame, then it is cleared.
 With very slow framerates, some mouse or key events could be lost (for simplicity, there's no event queue).
 
 ### Wall clock
