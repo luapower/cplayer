@@ -7,6 +7,8 @@ local player = require'cplayer'
 local cairo = require'cairo'
 local ft = require'freetype'
 local lib = ft:new()
+local winapi = require'winapi'
+require'winapi.clipboard'
 
 local view = glue.inherit({
 	--font metrics
@@ -263,6 +265,14 @@ end
 
 function editor:setactive(active)
 	self.player.active = active and self.id or nil
+end
+
+function editor:set_clipboard(s)
+	winapi.SetClipboardText(s)
+end
+
+function editor:get_clipboard()
+	return winapi.GetClipboardText() or ''
 end
 
 function player:code_editor(t)

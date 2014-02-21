@@ -71,7 +71,7 @@ local function parse_color(c)
 	end
 end
 
-function player:parse_color(c)
+function player7parse_color(c)
 	return parse_color(c)
 end
 
