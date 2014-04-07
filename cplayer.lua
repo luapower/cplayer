@@ -2,8 +2,9 @@
 local CairoPanel = require'winapi.cairopanel'
 local winapi = require'winapi'
 require'winapi.messageloop'
-require'winapi.vkcodes'
 require'winapi.keyboard'
+require'winapi.mouse'
+require'winapi.time'
 local cairo = require'cairo'
 local ffi = require'ffi'
 local glue = require'glue'
@@ -19,8 +20,8 @@ local player = {
 
 --winapi keycodes. key codes for 0-9 and A-Z keys are ascii codes.
 local keynames = {
-	[0x08] = 'backspace',[0x09] = 'tab',      [0x0d] = 'return',   [0x10] = 'shift',    [0x11] = 'ctrl',
-	[0x12] = 'alt',      [0x13] = 'break',    [0x14] = 'caps',     [0x1b] = 'esc',      [0x20] = 'space',
+	[0x08] = 'backspace',[0x09] = 'tab',      [0x0d] = 'enter',    [0x10] = 'shift',    [0x11] = 'ctrl',
+	[0x12] = 'alt',      [0x13] = 'break',    [0x14] = 'capslock', [0x1b] = 'esc',      [0x20] = 'space',
 	[0x21] = 'pageup',   [0x22] = 'pagedown', [0x23] = 'end',      [0x24] = 'home',     [0x25] = 'left',
 	[0x26] = 'up',       [0x27] = 'right',    [0x28] = 'down',     [0x2c] = 'printscreen',
 	[0x2d] = 'insert',   [0x2e] = 'delete',   [0x60] = 'numpad0',  [0x61] = 'numpad1',  [0x62] = 'numpad2',
@@ -34,6 +35,8 @@ local keynames = {
 	[0xba] = ';',        [0xbb] = '+',        [0xbc] = ',',        [0xbd] = '-',        [0xbe] = '.',
 	[0xbf] = '/',        [0xc0] = '`',        [0xdb] = '[',        [0xdc] = '\\',       [0xdd] = ']',
 	[0xde] = "'",
+	--querying
+
 }
 
 local function keyname(vk)
@@ -71,15 +74,13 @@ local function set_cursor(name)
 	winapi.SetCursor(winapi.LoadCursor(assert(cursors[name or 'normal'])))
 end
 
-ffi.cdef'uint32_t GetTickCount();'
-
 local function fps_function()
 	local count_per_sec = 2
 	local frame_count, last_frame_count, last_time = 0, 0
 	return function()
-		last_time = last_time or ffi.C.GetTickCount()
+		last_time = last_time or winapi.GetTickCount()
 		frame_count = frame_count + 1
-		local time = ffi.C.GetTickCount()
+		local time = winapi.GetTickCount()
 		if time - last_time > 1000 / count_per_sec then
 			last_frame_count, frame_count = frame_count, 0
 			last_time = time
@@ -206,7 +207,7 @@ function player:window(t)
 		self.cr:paint()
 
 		--set the wall clock
-		self.clock = ffi.C.GetTickCount()
+		self.clock = winapi.GetTickCount()
 
 		--clear the cursor state
 		self.cursor = nil
