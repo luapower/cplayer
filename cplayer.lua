@@ -1,7 +1,7 @@
 --cairo player: procedural graphics player with immediate mode gui toolkit
 local CairoPanel = require'winapi.cairopanel'
 local winapi = require'winapi'
-require'winapi.messageloop'
+require'winapi.windowclass'
 require'winapi.keyboard'
 require'winapi.mouse'
 require'winapi.time'
@@ -381,10 +381,7 @@ function player:window(t)
 
 	local function key_char_event(window, char, flags, down)
 		if down then
-			local buf = ffi.new'uint8_t[16]'
-			local sz = ffi.C.WideCharToMultiByte(winapi.CP_UTF8, 0, char, 1, buf, 16, nil, nil)
-			assert(sz > 0)
-			self.char = ffi.string(buf, sz)
+			self.char = char
 		else
 			self.char = nil
 		end
