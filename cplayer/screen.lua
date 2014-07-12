@@ -1,4 +1,4 @@
---screen: window manager for hit-testing, reordering, snapping, and rendering overlapping windows
+--screen: window manager for hit-testing, reordering, snapping, and rendering overlapping windows.
 local app = require'cplayer'
 local glue = require'glue'
 local box = require'box2d'
@@ -90,7 +90,7 @@ function screen:snapped_windows(win0)
 				for i, win in ipairs(self.windows) do
 					if win.visible and win ~= self._target_win then
 						local x, y, w, h = self._target_win:getbox()
-						local snapped, left, top, right, bottom = box.snapped_margins(1, x, y, w, h, win:getbox())
+						local snapped, left, top, right, bottom = box.snapped_edges(1, x, y, w, h, win:getbox())
 						if snapped then
 							coroutine.yield(win, left, top, right, bottom)
 						end
@@ -104,19 +104,16 @@ end
 
 function screen:_snap_rectangles(win0) --internal cached iterator for enumerating rectangles to snap against
 	self._target_win = win0
-	self._next_snap_rectangle = self._next_snap_rectangle or
-		coroutine.wrap(function()
-			while true do
-				coroutine.yield(self.x, self.y, self.w, self.h)
-				for i, win in ipairs(self.windows) do
-					if win.visible and win ~= self._target_win then
-						coroutine.yield(win:getbox())
-					end
-				end
-				coroutine.yield()
-			end
-		end)
-	return self._next_snap_rectangle
+	local t = {}
+	for i = #self.windows, 1, -1 do
+		local win = self.windows[i]
+		if win.visible and win ~= self._target_win then
+			local x, y, w, h = win:getbox()
+			t[#t+1] = {x = x, y = y, w = w, h = h}
+		end
+	end
+	t[#t+1] = {x = self.x, y = self.y, w = self.w, h = self.h}
+	return t
 end
 
 function screen:setpos(win, x, y)
@@ -126,7 +123,8 @@ function screen:setpos(win, x, y)
 			box.snap_pos(
 				self.snap_distance,
 				x, y, w, h,
-				self:_snap_rectangles(win)))
+				self:_snap_rectangles(win),
+				true))
 	else
 		win:_setpos(x, y)
 	end
@@ -135,10 +133,11 @@ end
 function screen:setbox(win, x, y, w, h)
 	if self.snapping then
 		win:_setbox(
-			box.snap_margins(
+			box.snap_edges(
 				self.snap_distance,
 				x, y, w, h,
-				self:_snap_rectangles(win)))
+				self:_snap_rectangles(win),
+				true))
 	else
 		win:_setbox(x, y, w, h)
 	end

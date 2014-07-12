@@ -4,10 +4,10 @@ local box = require'box2d'
 
 local toolbox = {
 	--metrics
-	margin = 4,
+	edge = 4,
 	titlebar_h = 20,
 	title_font = 'MS Sans Serif,8',
-	hit_margin = 4,
+	hit_edge = 4,
 	titlebar_text_halign = 'left',
 	--colors
 	inactive = {
@@ -29,7 +29,7 @@ function toolbox:new(t)
 	self = glue.inherit(t, self)
 	self.visible = true
 	self.minimized = false
-	self:set_margins()
+	self:set_edges()
 	if t.screen then
 		t.screen:add(self)
 	end
@@ -44,15 +44,15 @@ function toolbox:is_top()
 	return self.screen and self.screen:top_window() == self
 end
 
-function toolbox:set_margins()
+function toolbox:set_edges()
 	local left_button_count = 0
 	local right_button_count = 0
 	for _,b in pairs(self.buttons) do
 		left_button_count = left_button_count + (b.pos > 0 and 1 or 0)
 		right_button_count = right_button_count + (b.pos < 0 and 1 or 0)
 	end
-	self.left_margin = left_button_count * (self.titlebar_h - self.margin) + self.margin
-	self.right_margin = right_button_count * (self.titlebar_h - self.margin) + self.margin
+	self.left_edge = left_button_count * (self.titlebar_h - self.edge) + self.edge
+	self.right_edge = right_button_count * (self.titlebar_h - self.edge) + self.edge
 end
 
 --setting size and position
@@ -65,7 +65,7 @@ end
 function toolbox:_setbox(x, y, w, h)
 	self.x = x
 	self.y = y
-	local cx = self.left_margin + self.right_margin
+	local cx = self.left_edge + self.right_edge
 	local cy = self.titlebar_h
 	self.w = math.min(math.max(w, self.min_w or 0, cx), self.max_w or 1/0)
 	self.h = math.min(math.max(h, self.min_h or 0, cy), self.max_h or 1/0)
@@ -136,7 +136,7 @@ function toolbox:getbox()
 end
 
 function toolbox:titlebar_grab_box()
-	return box.hsplit(2, self.left_margin, box.hsplit(2, -self.right_margin, self:titlebar_box()))
+	return box.hsplit(2, self.left_edge, box.hsplit(2, -self.right_edge, self:titlebar_box()))
 end
 
 function toolbox:titlebar_text_box()
@@ -149,8 +149,8 @@ end
 function toolbox:titlebar_button_box(button)
 	local pos = button.pos
 	local x, y, w, h = self:titlebar_box()
-	return box.offset(-self.margin,
-				box.translate((pos + (pos < 0 and 1 or -1)) * (h - self.margin), 0,
+	return box.offset(-self.edge,
+				box.translate((pos + (pos < 0 and 1 or -1)) * (h - self.edge), 0,
 					box.hsplit(1, (pos < 0 and -1 or 1) * h, x, y, w, h)))
 end
 
@@ -231,7 +231,7 @@ function toolbox:render()
 
 	if self.visible and not self.app.active then
 
-		local margins_hot
+		local edges_hot
 
 		if close_button_hot then
 			if self.app.lpressed then
@@ -243,11 +243,11 @@ function toolbox:render()
 				self.app.active = id
 				self.app.ui.action = 'minimize'
 			end
-		elseif not self.minimized and self:hotbox(box.offset(self.hit_margin, self:getbox())) then
+		elseif not self.minimized and self:hotbox(box.offset(self.hit_edge, self:getbox())) then
 
 			local mx, my = self.app:mousepos()
 			local x, y, w, h = self:getbox()
-			local hit, left, top, right, bottom = box.hit_margins(mx, my, self.hit_margin, x, y, w, h)
+			local hit, left, top, right, bottom = box.hit_edges(mx, my, self.hit_edge, x, y, w, h)
 
 			if hit then
 
@@ -271,11 +271,11 @@ function toolbox:render()
 					end
 				end
 
-				margins_hot = true
+				edges_hot = true
 			end
 		end
 
-		if not margins_hot and titlebar_hot then --margins are hotter than titlebar
+		if not edges_hot and titlebar_hot then --edges are hotter than titlebar
 
 			self.app.cursor = 'move'
 
