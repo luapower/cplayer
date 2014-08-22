@@ -13,7 +13,7 @@ local box = require'box2d'
 local rmgui = require'cplayer.rmgui'
 
 local player = {
-	continuous_rendering = true,
+	continuous_rendering = false,
 	show_magnifier = true,
 	triple_click_max_wait = 500,
 }
@@ -116,7 +116,7 @@ function player:window(t)
 
 	local panel = CairoPanel{
 		parent = window, w = window.client_w, h = window.client_h,
-		anchors = {left=true, right=true, top=true, bottom=true}
+		anchors = {left=true, right=true, top=true, bottom=true},
 	}
 
 	self.window = window --needed by filebox
