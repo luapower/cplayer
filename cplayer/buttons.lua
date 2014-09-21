@@ -73,7 +73,7 @@ function player:button(t)
 
 	local color_state = (selected or self.active == id and hot and down) and 'selected'
 								or ((not self.active or self.active == id) and hot and 'hot')
-								or enabled and 'normal'
+								or enabled and (t.default and 'default' or 'normal')
 								or 'disabled'
 	local bg_color = color_state..'_bg'
 	local fg_color = color_state..'_fg'
@@ -108,7 +108,7 @@ function player:mbutton(t)
 		local bw = i < #values and bw or left_w
 		local cut = #values > 1 and (i==#values and 'left' or i==1 and 'right' or 'both')
 		local t = {id = id..'_'..i, x = x, y = y, w = bw, h = h, text = texts and texts[v] or tostring(v),
-						cut = cut, enabled = enabled and enabled[v]}
+						cut = cut, enabled = enabled and enabled[v], default = t.default == v}
 		if multisel then
 			t.selected = selected[v]
 			selected[v] = self:togglebutton(t)
