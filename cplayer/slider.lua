@@ -10,7 +10,7 @@ local function lerp(x, x0, x1, y0, y1)
 end
 
 local function snap(i, step)
-	return i % step < step - i % step and i - i % step or i + step - i % step
+	return math.floor(i / step) * step
 end
 
 function player:slider(t)

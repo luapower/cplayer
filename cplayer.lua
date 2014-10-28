@@ -262,7 +262,9 @@ function player:window(t)
 
 		--reset timed vars
 		if self.triple_click_start_time then
-			if self.clock - self.triple_click_start_time >= self.triple_click_max_wait then
+			if self.clock - self.triple_click_start_time
+					>= self.triple_click_max_wait
+			then
 				self.waiting_for_tripleclick = false
 				self.triple_click_start_time = nil
 			end
@@ -299,7 +301,9 @@ function player:window(t)
 		if self.triple_click_start_time then
 			if not self.waiting_for_tripleclick then
 				self.waiting_for_tripleclick = true
-			elseif self.clock - self.triple_click_start_time < self.triple_click_max_wait then
+			elseif self.clock - self.triple_click_start_time
+					< self.triple_click_max_wait
+			then
 				self.tripleclicked = true
 				self.waiting_for_tripleclick = false
 				self.triple_click_start_time = nil
@@ -422,7 +426,9 @@ end
 
 --null layout
 
-player.null_layout = {} --a null layout is a stateless layout that requires all box coordinates to be specified
+--a null layout is a stateless layout that requires all box coordinates
+--to be specified.
+player.null_layout = {}
 
 function player.null_layout:getbox(t)
 	return
@@ -457,7 +463,8 @@ end
 local stopwatch = {}
 
 function player:stopwatch(duration, formula)
-	local t = glue.inherit({player = self, start = self.clock, duration = duration, formula = formula}, stopwatch)
+	local t = glue.inherit({player = self, start = self.clock,
+		duration = duration, formula = formula}, stopwatch)
 	self.stopwatches[t] = true
 	return t
 end
@@ -521,6 +528,7 @@ glue.autoload(player, {
 	sat_lum_square = 'cplayer.sat_lum_square',
 	toolbox      = 'cplayer.toolbox',
 	screen       = 'cplayer.screen',
+	checkerboard = 'cplayer.checkerboard',
 	--complex widgets
 	code_editor  = 'cplayer.code_editor',
 	grid         = 'cplayer.grid',

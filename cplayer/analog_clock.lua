@@ -1,6 +1,9 @@
 local player = require'cplayer'
+local socket = require'socket' --for gettime(), self.clock is not synchronized
+local easing = require'easing'
 
---point on the circle of radius r, at position n, on a circle with f positions starting at -90 degrees.
+--point on the circle of radius r, at position n, on a circle
+--with f positions starting at -90 degrees.
 local function point(n, r, f)
 	local a = math.rad((n - f / 4) * (360 / f))
 	local y = math.sin(a) * r
@@ -19,37 +22,68 @@ function player:analog_clock(t)
 		cx = x + w / 2
 		cy = y + h / 2
 	end
-	local h = t.time.hour
-	local m = t.time.min
-	local s = t.time.sec
+	local time = t.time or os.date'*t'
+	local h = time.hour
+	local m = time.min
+	local s = time.sec
+	local ms = math.floor(socket.gettime() * 1000) % 1000
+
+	--logo
+	if t.text then
+		self:textbox(cx-r, cy-r, 2*r, 3.2*r,
+			t.text,
+			'Arial Black,'..math.floor(r/14),
+			t.text_color or t.color, 'center', 'center')
+	end
 
 	--marker lines
 	for i = 0, 59 do
 		local x1, y1 = point(i, r, 60)
-		local x2, y2 = point(i, r * 0.95 * (i % 5 == 0 and 0.9 or 1), 60)
-		self:line(cx + x1, cy + y1, cx + x2, cy + y2, t.marker_color or t.color, t.marker_width or t.width)
+		local x2, y2 = point(i, r * 0.95 * (i % 5 == 0 and 0.89 or .99), 60)
+		self:line(cx + x1, cy + y1, cx + x2, cy + y2,
+			t.color,
+			i % 5 == 0 and r * .03 or r * .015)
 	end
 
 	h = h + m / 60 --adjust hour by minute
 
 	--hour tongue
-	local x2, y2 = point(h, r * 0.4, 12)
-	self:line(cx, cy, cx + x2, cy + y2, t.hour_color or t.color, t.hour_width or t.width)
+	local x1, y1 = point(h, r * -.2, 12)
+	local x2, y2 = point(h, r * 0.6, 12)
+	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
+		t.color,
+		r * .08)
 
 	--minute tongue
-	local x2, y2 = point(m, r * 0.7, 60)
-	self:line(cx, cy, cx + x2, cy + y2, t.min_color or t.color, t.min_width or t.width)
+	local x1, y1 = point(m, r * -.15, 60)
+	local x2, y2 = point(m, r * 0.95, 60)
+	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
+		t.color,
+		r * .05)
 
 	--seconds tongue
-	local x2, y2 = point(s, r * 0.9, 60)
-	self:line(cx, cy, cx + x2, cy + y2, t.sec_color or t.color, t.sec_width or t.width)
+	local ms1 = 150
+	if ms < ms1 then
+		s = s - 1 + easing.out_elastic(ms / ms1, 0, 1, 1)
+	end
+	local x1, y1 = point(s, r * -.2, 60)
+	local x2, y2 = point(s, r * 0.75, 60)
+	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
+		t.sec_color or t.color,
+		r * 0.015)
+	self:circle(cx + x2, cy + y2, r * 0.08, t.sec_color or t.color)
 end
 
 if not ... then
 
 function player:on_render(cr)
-	self:analog_clock{x = 10, y = 10, w = self.w - 20, h = self.h - 20, time = os.date'*t',
-		sec_color = '#ff0000', marker_width = 2}
+	self.continuous_rendering = true
+	self:analog_clock{
+		x = 10, y = 10, w = self.w - 20, h = self.h - 20,
+		sec_color = '#ff0000',
+		text_color = '#800000',
+		text = 'LUA POWER',
+	}
 end
 
 player:play()
