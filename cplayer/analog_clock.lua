@@ -70,14 +70,13 @@ function player:analog_clock(t)
 	local x2, y2 = point(s, r * 0.75, 60)
 	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
 		t.sec_color or t.color,
-		r * 0.015)
-	self:circle(cx + x2, cy + y2, r * 0.08, t.sec_color or t.color)
+		r * 0.02)
+	self:circle(cx + x2, cy + y2, r * 0.07, t.sec_color or t.color)
 end
 
 if not ... then
 
 function player:on_render(cr)
-	self.continuous_rendering = true
 	self:analog_clock{
 		x = 10, y = 10, w = self.w - 20, h = self.h - 20,
 		sec_color = '#ff0000',

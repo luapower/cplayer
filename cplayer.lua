@@ -13,7 +13,7 @@ local box = require'box2d'
 local rmgui = require'cplayer.rmgui'
 
 local player = {
-	continuous_rendering = false,
+	continuous_rendering = true,
 	show_magnifier = true,
 	triple_click_max_wait = 500,
 }
