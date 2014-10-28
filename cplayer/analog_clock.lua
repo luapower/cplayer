@@ -51,27 +51,27 @@ function player:analog_clock(t)
 	local x1, y1 = point(h, r * -.2, 12)
 	local x2, y2 = point(h, r * 0.6, 12)
 	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
-		t.color,
+		t.hour_color or t.color,
 		r * .08)
 
 	--minute tongue
 	local x1, y1 = point(m, r * -.15, 60)
 	local x2, y2 = point(m, r * 0.95, 60)
 	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
-		t.color,
+		t.min_color or t.color,
 		r * .05)
 
 	--seconds tongue
-	local ms1 = 150
+	local ms1 = 400
 	if ms < ms1 then
 		s = s - 1 + easing.out_elastic(ms / ms1, 0, 1, 1)
 	end
-	local x1, y1 = point(s, r * -.2, 60)
-	local x2, y2 = point(s, r * 0.75, 60)
+	local x1, y1 = point(s, r * -.15, 60)
+	local x2, y2 = point(s, r * 0.73, 60)
 	self:line(cx + x1, cy + y1, cx + x2, cy + y2,
 		t.sec_color or t.color,
-		r * 0.02)
-	self:circle(cx + x2, cy + y2, r * 0.07, t.sec_color or t.color)
+		r * 0.03)
+	self:circle(cx + x2, cy + y2, r * 0.09, t.sec_color or t.color)
 end
 
 if not ... then
@@ -79,6 +79,8 @@ if not ... then
 function player:on_render(cr)
 	self:analog_clock{
 		x = 10, y = 10, w = self.w - 20, h = self.h - 20,
+		hour_color = '#eeeeee',
+		min_color = '#dddddd',
 		sec_color = '#ff0000',
 		text_color = '#800000',
 		text = 'LUA POWER',
