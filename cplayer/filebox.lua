@@ -9,7 +9,7 @@ HRESULT CoInitialize(LPVOID pvReserved);
 HRESULT CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit);
 ]]
 
-local ole = ffi.load'Ole32.dll'
+local ole = ffi.load'Ole32'
 ole.CoInitializeEx(nil, 2)
 
 function player:filebox(t)

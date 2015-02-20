@@ -308,4 +308,3 @@ function player:code_editor(t)
 end
 
 if not ... then require'codedit_demo' end
-
