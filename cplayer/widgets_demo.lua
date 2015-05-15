@@ -122,5 +122,8 @@ function player:on_render(cr)
 	t.splitx = self:vsplitter{id = 'split', x = t.splitx or 950, y = 10, w = 6, h = 300}
 end
 
+player.continuous_rendering = false
+
 return player:play()
+
 

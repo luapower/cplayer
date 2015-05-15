@@ -1,5 +1,5 @@
 --cairo player: procedural graphics player with immediate mode gui toolkit
-local CairoPanel = require'winapi.cairopanel'
+local CairoPanel = require'winapi.cairopanel2'
 local winapi = require'winapi'
 require'winapi.windowclass'
 require'winapi.keyboard'
