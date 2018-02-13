@@ -10,7 +10,7 @@ local cairo = require'cairo'
 local ft = require'freetype'
 local ft_lib = ft:new()
 
-local view = codedit.object({
+local view = codedit.object(codedit.view, {
 	--scrollbox options
 	vscroll = 'always',
 	hscroll = 'auto',
@@ -57,7 +57,7 @@ local view = codedit.object({
 	minimap = true,
 	smooth_vscroll = false,
 	smooth_hscroll = false,
-}, codedit.view)
+})
 
 view._init = view.init
 
@@ -261,7 +261,7 @@ function view:render()
 	self.player.cr:reset_clip()
 end
 
-local editor = codedit.object({view = view}, codedit.editor)
+local editor = codedit.object(codedit.editor, {view = view})
 
 function view:font_file(font_file)
 	if not font_file then
@@ -315,9 +315,9 @@ function player:code_editor(t)
 	local id = assert(t.id, 'id missing')
 	local ed = t
 	if not t.buffer or not t.buffer.lines then
-		t.view = t.view and codedit.object(t.view, view) or view
+		t.view = t.view and codedit.object(view, t.view) or view
 		t.cursor = t.cursor and
-			coededit.object(t.cursor, editor.cursor) or editor.cursor
+			coededit.object(editor.cursor, t.cursor) or editor.cursor
 		ed = editor(t)
 		ed.cursor.changed.blinking = true
 	end
