@@ -40,7 +40,7 @@ function player:slider(t)
 		end
 	end
 
-	local w1 = lerp(i, i0, i1, 0, w)
+	local w1 = lerp(clamp(i, i0, i1), i0, i1, 0, w)
 	text =
 		t.pos_text and t.pos_text(i)
 		or (text and (text .. ': ') or '') .. tostring(i)
