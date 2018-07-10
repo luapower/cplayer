@@ -3,6 +3,7 @@
 if not ... then require'codedit_demo'; return end
 
 local codedit = require'codedit'
+require'cplayer.codedit_imgui'
 local glue = require'glue'
 local player = require'cplayer'
 local nw = require'nw'
